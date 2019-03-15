@@ -12,6 +12,9 @@ Parameters:
   ToolsAccount:
     Description: AWS AccountNumber for tools account
     Type: Number
+  TestAccount:
+    Description: AWS AccountNumber for test account
+    Type: Number
   CMKARN:
     Description: ARN of the KMS CMK creates in Tools account
     Type: String
@@ -28,6 +31,7 @@ Resources:
             Principal:
               AWS:
                 - !Ref ToolsAccount
+                - !Ref TestAccount
             Action:
               - sts:AssumeRole
       Path: /

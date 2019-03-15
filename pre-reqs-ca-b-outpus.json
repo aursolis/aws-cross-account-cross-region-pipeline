@@ -1,0 +1,49 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:694337658763:stack/pre-reqs-ca/72c1a480-475b-11e9-9f3b-0eb5200d39ae",
+            "StackName": "pre-reqs-ca",
+            "ChangeSetId": "arn:aws:cloudformation:us-east-1:694337658763:changeSet/awscli-cloudformation-package-deploy-1552679369/352cb099-50d3-4a0b-b5e2-0d123cad2eb2",
+            "Description": "Creates bucket account B",
+            "Parameters": [
+                {
+                    "ParameterKey": "DevAccount",
+                    "ParameterValue": "924474025577"
+                },
+                {
+                    "ParameterKey": "ProjectName",
+                    "ParameterValue": "sample-lambda"
+                },
+                {
+                    "ParameterKey": "ProductionAccount",
+                    "ParameterValue": "694337658763"
+                },
+                {
+                    "ParameterKey": "TestAccount",
+                    "ParameterValue": "694337658763"
+                },
+                {
+                    "ParameterKey": "CodeBuildCondition",
+                    "ParameterValue": "false"
+                }
+            ],
+            "CreationTime": "2019-03-15T19:49:30.471Z",
+            "LastUpdatedTime": "2019-03-15T19:49:35.984Z",
+            "RollbackConfiguration": {},
+            "StackStatus": "CREATE_COMPLETE",
+            "DisableRollback": false,
+            "NotificationARNs": [],
+            "Outputs": [
+                {
+                    "OutputKey": "ArtifactBucket",
+                    "OutputValue": "pre-reqs-ca-artifactbucket-1pryckrzw6utx"
+                }
+            ],
+            "Tags": [],
+            "EnableTerminationProtection": false,
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}

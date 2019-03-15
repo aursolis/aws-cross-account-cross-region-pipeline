@@ -1,0 +1,53 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:eu-west-1:924474025577:stack/pre-reqs-ca/fb4ce4a0-475a-11e9-9378-0a9391483dc6",
+            "StackName": "pre-reqs-ca",
+            "ChangeSetId": "arn:aws:cloudformation:eu-west-1:924474025577:changeSet/awscli-cloudformation-package-deploy-1552679169/b0f27fea-4a8d-4dff-9659-c39338197ddd",
+            "Description": "Creates a CMK in KMS and grants access to other accounts",
+            "Parameters": [
+                {
+                    "ParameterKey": "DevAccount",
+                    "ParameterValue": "924474025577"
+                },
+                {
+                    "ParameterKey": "ProjectName",
+                    "ParameterValue": "sample-lambda"
+                },
+                {
+                    "ParameterKey": "ProductionAccount",
+                    "ParameterValue": "694337658763"
+                },
+                {
+                    "ParameterKey": "TestAccount",
+                    "ParameterValue": "694337658763"
+                },
+                {
+                    "ParameterKey": "CodeBuildCondition",
+                    "ParameterValue": "false"
+                }
+            ],
+            "CreationTime": "2019-03-15T19:46:10.049Z",
+            "LastUpdatedTime": "2019-03-15T19:46:15.316Z",
+            "RollbackConfiguration": {},
+            "StackStatus": "CREATE_COMPLETE",
+            "DisableRollback": false,
+            "NotificationARNs": [],
+            "Outputs": [
+                {
+                    "OutputKey": "CMK",
+                    "OutputValue": "arn:aws:kms:eu-west-1:924474025577:key/5a16417d-76f1-4554-a9e9-d0c0736fc99d"
+                },
+                {
+                    "OutputKey": "ArtifactBucket",
+                    "OutputValue": "pre-reqs-ca-artifactbucket-t8iob9phtwfu"
+                }
+            ],
+            "Tags": [],
+            "EnableTerminationProtection": false,
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}

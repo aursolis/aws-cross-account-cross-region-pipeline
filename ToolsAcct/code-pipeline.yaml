@@ -16,6 +16,9 @@ Parameters:
   S3Bucket:
     Description: S3 Bucket, which will hold the artifacts
     Type: String
+  S3BucketB:
+    Description: S3 Bucket, which will hold the artifacts
+    Type: String
   DevAccount:
     Description: AWS AccountNumber for dev
     Type: Number
@@ -32,6 +35,10 @@ Parameters:
     Description: Conditionally creates the resources for cross account access
     Type: String
     Default: false
+
+Outputs:
+  CodeBuildProjectArn:
+    Value: !GetAtt [BuildProjectRole,Arn]
 
 Conditions:
   AddCodeBuildResource: !Equals [ !Ref CrossAccountCondition, true ]
@@ -71,6 +78,8 @@ Resources:
             Resource:
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket, '/*']]
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket]]
+             - !Join ['',['arn:aws:s3:::',!Ref S3BucketB, '/*']]
+             - !Join ['',['arn:aws:s3:::',!Ref S3BucketB]]
           -
             Effect: Allow
             Action:
@@ -102,6 +111,8 @@ Resources:
         EnvironmentVariables:
           - Name: S3Bucket
             Value: !Ref S3Bucket
+          - Name: S3BucketB
+            Value: !Ref S3BucketB
           - Name: KMSKey
             Value: !Ref CMKARN
       Source:
@@ -192,6 +203,8 @@ Resources:
             Resource:
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket, '/*']]
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket]]
+             - !Join ['',['arn:aws:s3:::',!Ref S3BucketB, '/*']]
+             - !Join ['',['arn:aws:s3:::',!Ref S3BucketB]]
           -
             Effect: Allow
             Action:
@@ -230,6 +243,7 @@ Resources:
                   - AddCodeBuildResource
                   - !Sub arn:aws:iam::${DevAccount}:role/ToolsAcctCodePipelineCodeCommitRole
                   - !Ref AWS::NoValue
+              Region: eu-west-1
         -
           Name: Build
           Actions:
@@ -247,6 +261,7 @@ Resources:
               - Name: SCCheckoutArtifact
             OutputArtifacts:
               - Name: BuildOutput
+            Region: eu-west-1
             #REMOVE:RoleArn: arn:aws:iam::485873893626:role/ToolsAcctCodePipelineCodeCommitRole
         - Name: DeployToTest
           Actions:
@@ -277,6 +292,7 @@ Resources:
                   - AddCodeBuildResource
                   - !Sub arn:aws:iam::${TestAccount}:role/ToolsAcctCodePipelineCloudFormationRole
                   - !Ref AWS::NoValue
+              Region: us-east-1
             - Name: DeployChangeSetTest
               ActionTypeId:
                 Category: Deploy
@@ -302,67 +318,86 @@ Resources:
                   - AddCodeBuildResource
                   - !Sub arn:aws:iam::${TestAccount}:role/ToolsAcctCodePipelineCloudFormationRole
                   - !Ref AWS::NoValue
-        - Name: DeployToProduction
-          Actions:
-            - Name: CreateChangeSetProd
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: 1
-                Provider: CloudFormation
-              Configuration:
-                ChangeSetName: sample-lambda-test
-                ActionMode: CHANGE_SET_REPLACE
-                StackName: sample-lambda-test
-                Capabilities: CAPABILITY_NAMED_IAM
-                TemplatePath: BuildOutput::samtemplate.yaml
-                #RoleArn: !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
-                RoleArn:
-                  Fn::If:
-                  - AddCodeBuildResource
-                  - !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
-                  - !Ref AWS::NoValue
-              InputArtifacts:
-                - Name: BuildOutput
-              RunOrder: 1
-              #RoleArn: !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
-              RoleArn:
-                  Fn::If:
-                  - AddCodeBuildResource
-                  - !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
-                  - !Ref AWS::NoValue
-            - Name: DeployChangeSetProd
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Version: 1
-                Provider: CloudFormation
-              Configuration:
-                ChangeSetName: sample-lambda-test
-                ActionMode: CHANGE_SET_EXECUTE
-                StackName: sample-lambda-test
-                #RoleArn: !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
-                RoleArn:
-                  Fn::If:
-                  - AddCodeBuildResource
-                  - !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
-                  - !Ref AWS::NoValue
-              InputArtifacts:
-                - Name: BuildOutput
-              RunOrder: 2
-              #RoleArn: !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
-              RoleArn:
-                Fn::If:
-                - AddCodeBuildResource
-                - !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
-                - !Ref AWS::NoValue
+              Region: us-east-1
+        # - Name: DeployToProduction
+        #   Actions:
+        #     - Name: CreateChangeSetProd
+        #       ActionTypeId:
+        #         Category: Deploy
+        #         Owner: AWS
+        #         Version: 1
+        #         Provider: CloudFormation
+        #       Configuration:
+        #         ChangeSetName: sample-lambda-test
+        #         ActionMode: CHANGE_SET_REPLACE
+        #         StackName: sample-lambda-test
+        #         Capabilities: CAPABILITY_NAMED_IAM
+        #         TemplatePath: BuildOutput::samtemplate.yaml
+        #         #RoleArn: !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
+        #         RoleArn:
+        #           Fn::If:
+        #           - AddCodeBuildResource
+        #           - !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
+        #           - !Ref AWS::NoValue
+        #       InputArtifacts:
+        #         - Name: BuildOutput
+        #       RunOrder: 1
+        #       #RoleArn: !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
+        #       RoleArn:
+        #           Fn::If:
+        #           - AddCodeBuildResource
+        #           - !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
+        #           - !Ref AWS::NoValue
+        #     - Name: DeployChangeSetProd
+        #       ActionTypeId:
+        #         Category: Deploy
+        #         Owner: AWS
+        #         Version: 1
+        #         Provider: CloudFormation
+        #       Configuration:
+        #         ChangeSetName: sample-lambda-test
+        #         ActionMode: CHANGE_SET_EXECUTE
+        #         StackName: sample-lambda-test
+        #         #RoleArn: !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
+        #         RoleArn:
+        #           Fn::If:
+        #           - AddCodeBuildResource
+        #           - !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
+        #           - !Ref AWS::NoValue
+        #       InputArtifacts:
+        #         - Name: BuildOutput
+        #       RunOrder: 2
+        #       #RoleArn: !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
+        #       RoleArn:
+        #         Fn::If:
+        #         - AddCodeBuildResource
+        #         - !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
+        #         - !Ref AWS::NoValue
 
-      ArtifactStore:
-        Type: S3
-        Location: !Ref S3Bucket
-        EncryptionKey:
-          Id: !Ref CMKARN
-          Type: KMS
+      # ArtifactStore:
+      #   Type: S3
+      #   Location: !Ref S3Bucket
+      #   EncryptionKey:
+      #     Id: !Ref CMKARN
+      #     Type: KMS
+
+      ArtifactStores:
+              -
+                Region: "eu-west-1"
+                ArtifactStore:
+                  Type: "S3"
+                  Location: !Ref S3Bucket
+                  EncryptionKey:
+                    Id: !Ref CMKARN
+                    Type: KMS
+              -
+                Region: "us-east-1"
+                ArtifactStore:
+                  Type: "S3"
+                  Location: !Ref S3BucketB
+                  EncryptionKey:
+                    Id: !Ref CMKARN
+                    Type: KMS
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:

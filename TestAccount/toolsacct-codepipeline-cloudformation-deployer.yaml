@@ -12,7 +12,13 @@ Parameters:
   S3Bucket:
     Description: S3 Bucket in Tools Account, which holds the artifacts built by codebuild
     Type: String
+  S3BucketB:
+    Description: S3 Bucket in Tools Account, which holds the artifacts built by codebuild
+    Type: String
   ToolsAccount:
+    Description: AWS AccountNumber for Tools
+    Type: Number
+  TestAccount:
     Description: AWS AccountNumber for Tools
     Type: Number
   CMKARN:
@@ -31,6 +37,7 @@ Resources:
             Principal:
               AWS:
                 - !Ref ToolsAccount
+                - !Ref TestAccount
             Action:
               - sts:AssumeRole
       Path: /
@@ -68,6 +75,8 @@ Resources:
             Principal:
               Service:
                 - cloudformation.amazonaws.com
+              AWS:
+                - !Ref TestAccount
             Action:
               - sts:AssumeRole
       Path: /
@@ -110,6 +119,8 @@ Resources:
             Resource:
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket, '/*']]
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket]]
+             - !Join ['',['arn:aws:s3:::',!Ref S3BucketB, '/*']]
+             - !Join ['',['arn:aws:s3:::',!Ref S3BucketB]]
       Roles:
         -
           !Ref CFDeployerRole

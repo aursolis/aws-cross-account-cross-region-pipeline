@@ -1,0 +1,67 @@
+#  Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+#  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
+#  the License. A copy of the License is located at
+#      http://aws.amazon.com/apache2.0/
+#  or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+#  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and
+#  limitations under the License.
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CodePipeline for the Sample Lambda Function
+Parameters:
+  ProjectName:
+    Description: Name of the Project
+    Type: String
+    Default: sample-lambda
+  S3Bucket:
+    Description: S3 Bucket, which will hold the artifacts
+    Type: String
+  S3BucketB:
+    Description: S3 Bucket, which will hold the artifacts
+    Type: String
+  DevAccount:
+    Description: AWS AccountNumber for dev
+    Type: Number
+  TestAccount:
+    Description: AWS AccountNumber for test
+    Type: Number
+  ProductionAccount:
+    Description: AWS AccountNumber for production
+    Type: Number
+  CMKARN:
+    Description: ARN of the KMS CMK creates in Tools account
+    Type: String
+  CrossAccountCondition:
+    Description: Conditionally creates the resources for cross account access
+    Type: String
+    Default: false
+  BuildProjectRoleArn:
+    Description: CodeBuild Project Arn for Bucket B policy
+    Type: String
+
+Conditions:
+  AddCodeBuildResource: !Equals [ !Ref CrossAccountCondition, true ]
+
+Resources:
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - s3:*
+            Effect: Allow
+            Resource:
+              - !Sub arn:aws:s3:::${S3BucketB}
+              - !Sub arn:aws:s3:::${S3BucketB}/*
+            Principal:
+              AWS:
+                - !Sub arn:aws:iam::${DevAccount}:role/ToolsAcctCodePipelineCodeCommitRole
+                - !Sub arn:aws:iam::${TestAccount}:role/ToolsAcctCodePipelineCloudFormationRole
+                - !Sub arn:aws:iam::${TestAccount}:role/cloudformationdeployer-role
+                - !Sub arn:aws:iam::${ProductionAccount}:role/ToolsAcctCodePipelineCloudFormationRole
+                - !Sub arn:aws:iam::${ProductionAccount}:role/cloudformationdeployer-role
+                - !Ref BuildProjectRoleArn
