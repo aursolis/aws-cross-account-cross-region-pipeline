@@ -75,6 +75,8 @@ Resources:
               - s3:GetBucketPolicy
               - s3:GetObject
               - s3:ListBucket
+              - s3:PutBucketPolicy
+              - s3:DeleteBucketPolicy
             Resource:
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket, '/*']]
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket]]
@@ -148,6 +150,8 @@ Resources:
             Principal:
               Service:
                 - codepipeline.amazonaws.com
+              AWS:
+                - !Ref TestAccount
             Action:
               - sts:AssumeRole
       Path: /
@@ -184,8 +188,7 @@ Resources:
               - cloudformation:SetStackPolicy
               - cloudformation:ValidateTemplate
               - iam:PassRole
-              - s3:ListAllMyBuckets
-              - s3:GetBucketLocation
+              - s3:*
             Resource:
               - "*"
           -
@@ -200,6 +203,8 @@ Resources:
               - s3:GetBucketPolicy
               - s3:GetObject
               - s3:ListBucket
+              - s3:PutBucketPolicy
+              - s3:DeleteBucketPolicy
             Resource:
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket, '/*']]
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket]]

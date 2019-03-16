@@ -25,8 +25,8 @@ ProdAccount=694337658763
 ProdAccountProfile=crossaccount
 
 aws cloudformation deploy --stack-name pre-reqs-ca --template-file ToolsAcct/pre-reqs-a.yaml --parameter-overrides DevAccount=$DevAccount TestAccount=$TestAccount ProductionAccount=$ProdAccount --profile $ToolsAccountProfile
-S3Bucket=$(aws cloudformation --profile $ToolsAccountProfile describe-stacks --stack-name pre-reqs-ca 2>&1 | tee pre-reqs-ca-outpus.json | jq -r '.Stacks[0].Outputs[0].OutputValue')
-CMKArn=$(aws cloudformation --profile $ToolsAccountProfile describe-stacks --stack-name pre-reqs-ca 2>&1 | tee pre-reqs-ca-outpus.json | jq -r '.Stacks[0].Outputs[1].OutputValue')
+S3Bucket=$(aws cloudformation --profile $ToolsAccountProfile describe-stacks --stack-name pre-reqs-ca 2>&1 | tee pre-reqs-ca-outpus.json | jq -r '.Stacks[0].Outputs[1].OutputValue')
+CMKArn=$(aws cloudformation --profile $ToolsAccountProfile describe-stacks --stack-name pre-reqs-ca 2>&1 | tee pre-reqs-ca-outpus.json | jq -r '.Stacks[0].Outputs[0].OutputValue')
 
 aws cloudformation deploy --stack-name pre-reqs-ca --template-file ToolsAcct/pre-reqs-b.yaml --parameter-overrides DevAccount=$DevAccount TestAccount=$TestAccount ProductionAccount=$ProdAccount --profile $TestAccountProfile
 S3BucketB=$(aws cloudformation --profile $TestAccountProfile describe-stacks --stack-name pre-reqs-ca 2>&1 | tee pre-reqs-ca-b-outpus.json | jq -r '.Stacks[0].Outputs[0].OutputValue')
@@ -40,26 +40,26 @@ S3BucketB=$(aws cloudformation --profile $TestAccountProfile describe-stacks --s
 echo -n "Executing in DEV Account"
 aws cloudformation deploy --stack-name toolsacct-codepipeline-role-ca --template-file DevAccount/toolsacct-codepipeline-codecommit.yaml --capabilities CAPABILITY_NAMED_IAM --parameter-overrides ToolsAccount=$ToolsAccount TestAccount=$TestAccount CMKARN=$CMKArn --profile $DevAccountProfile
 
-#echo -n "Executing in TEST Account"
-#aws cloudformation deploy --stack-name toolsacct-codepipeline-cloudformation-role-ca --template-file TestAccount/toolsacct-codepipeline-cloudformation-deployer.yaml --capabilities CAPABILITY_NAMED_IAM --parameter-overrides ToolsAccount=$ToolsAccount TestAccount=$TestAccount CMKARN=$CMKArn  S3Bucket=$S3Bucket S3BucketB=$S3BucketB --profile $TestAccountProfile
+echo -n "Executing in TEST Account"
+aws cloudformation deploy --stack-name toolsacct-codepipeline-cloudformation-role-ca --template-file TestAccount/toolsacct-codepipeline-cloudformation-deployer.yaml --capabilities CAPABILITY_NAMED_IAM --parameter-overrides ToolsAccount=$ToolsAccount TestAccount=$TestAccount CMKARN=$CMKArn  S3Bucket=$S3Bucket S3BucketB=$S3BucketB --profile $TestAccountProfile
 
 ##echo -n "Executing in PROD Account"
 ##aws cloudformation deploy --stack-name toolsacct-codepipeline-cloudformation-role-ca --template-file TestAccount/toolsacct-codepipeline-cloudformation-deployer.yaml --capabilities CAPABILITY_NAMED_IAM --parameter-overrides ToolsAccount=$ToolsAccount CMKARN=$CMKArn  S3Bucket=$S3Bucket S3BucketB=$S3BucketB --profile $ProdAccountProfile
 
-#echo -n "Creating Pipeline in Tools Account"
-#aws cloudformation deploy --stack-name sample-lambda-pipeline-ca --template-file ToolsAcct/code-pipeline.yaml --parameter-overrides DevAccount=$DevAccount TestAccount=$TestAccount ProductionAccount=$ProdAccount CMKARN=$CMKArn S3Bucket=$S3Bucket S3BucketB=$S3BucketB --capabilities CAPABILITY_NAMED_IAM --profile $ToolsAccountProfile
+echo -n "Creating Pipeline in Tools Account"
+aws cloudformation deploy --stack-name sample-lambda-pipeline-ca --template-file ToolsAcct/code-pipeline.yaml --parameter-overrides DevAccount=$DevAccount TestAccount=$TestAccount ProductionAccount=$ProdAccount CMKARN=$CMKArn S3Bucket=$S3Bucket S3BucketB=$S3BucketB --capabilities CAPABILITY_NAMED_IAM --profile $ToolsAccountProfile
 
-#CBArn=$(aws cloudformation --profile $ToolsAccountProfile describe-stacks --stack-name sample-lambda-pipeline-ca 2>&1 | tee sample-lambda-pipeline-ca.json | jq -r '.Stacks[0].Outputs[1].OutputValue')
+CBArn=$(aws cloudformation --profile $ToolsAccountProfile describe-stacks --stack-name sample-lambda-pipeline-ca 2>&1 | tee sample-lambda-pipeline-ca.json | jq -r '.Stacks[0].Outputs[0].OutputValue')
 
-#echo -n "Setting policy in Bucket B in TEST Account"
-#aws cloudformation deploy --stack-name bucketb-policy --template-file TestAccount/bucketb-policy.yaml --parameter-overrides DevAccount=$DevAccount TestAccount=$TestAccount ProductionAccount=$ProdAccount CMKARN=$CMKArn S3Bucket=$S3Bucket S3BucketB=$S3BucketB BuildProjectRoleArn=$CBArn --capabilities CAPABILITY_NAMED_IAM --profile $TestAccountProfile
+echo -n "Setting policy in Bucket B in TEST Account"
+aws cloudformation deploy --stack-name bucketb-policy --template-file TestAccount/bucketb-policy.yaml --parameter-overrides DevAccount=$DevAccount TestAccount=$TestAccount ProductionAccount=$ProdAccount CMKARN=$CMKArn S3Bucket=$S3Bucket S3BucketB=$S3BucketB BuildProjectRoleArn=$CBArn --capabilities CAPABILITY_NAMED_IAM --profile $TestAccountProfile
 
 #echo -n "Adding Permissions to the CMK"
 #aws cloudformation deploy --stack-name pre-reqs-ca --template-file ToolsAcct/pre-reqs-a.yaml --parameter-overrides CodeBuildCondition=true --profile $ToolsAccountProfile
 #aws cloudformation deploy --stack-name pre-reqs-ca --template-file ToolsAcct/pre-reqs-b.yaml --parameter-overrides CodeBuildCondition=true --profile $TestAccountProfile
 
-#echo -n "Adding Permissions to the Cross Accounts"
-#aws cloudformation deploy --stack-name sample-lambda-pipeline-ca --template-file ToolsAcct/code-pipeline.yaml --parameter-overrides CrossAccountCondition=true --capabilities CAPABILITY_NAMED_IAM --profile $ToolsAccountProfile
+echo -n "Adding Permissions to the Cross Accounts"
+aws cloudformation deploy --stack-name sample-lambda-pipeline-ca --template-file ToolsAcct/code-pipeline.yaml --parameter-overrides CrossAccountCondition=true --capabilities CAPABILITY_NAMED_IAM --profile $ToolsAccountProfile
 
 #Cleanup
 #aws cloudformation delete-stack --stack-name toolsacct-codepipeline-role-ca --profile $DevAccountProfile

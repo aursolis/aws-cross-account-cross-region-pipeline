@@ -1,9 +1,9 @@
 {
     "Stacks": [
         {
-            "StackId": "arn:aws:cloudformation:us-east-1:694337658763:stack/pre-reqs-ca/72c1a480-475b-11e9-9f3b-0eb5200d39ae",
+            "StackId": "arn:aws:cloudformation:us-east-1:694337658763:stack/pre-reqs-ca/21a32830-4774-11e9-8715-0aaa9d7b8aca",
             "StackName": "pre-reqs-ca",
-            "ChangeSetId": "arn:aws:cloudformation:us-east-1:694337658763:changeSet/awscli-cloudformation-package-deploy-1552679369/352cb099-50d3-4a0b-b5e2-0d123cad2eb2",
+            "ChangeSetId": "arn:aws:cloudformation:us-east-1:694337658763:changeSet/awscli-cloudformation-package-deploy-1552689970/3f6d3345-762e-4d15-8e41-f82e40d8f799",
             "Description": "Creates bucket account B",
             "Parameters": [
                 {
@@ -21,14 +21,10 @@
                 {
                     "ParameterKey": "TestAccount",
                     "ParameterValue": "694337658763"
-                },
-                {
-                    "ParameterKey": "CodeBuildCondition",
-                    "ParameterValue": "false"
                 }
             ],
-            "CreationTime": "2019-03-15T19:49:30.471Z",
-            "LastUpdatedTime": "2019-03-15T19:49:35.984Z",
+            "CreationTime": "2019-03-15T22:46:11.791Z",
+            "LastUpdatedTime": "2019-03-15T22:46:17.635Z",
             "RollbackConfiguration": {},
             "StackStatus": "CREATE_COMPLETE",
             "DisableRollback": false,
@@ -36,7 +32,7 @@
             "Outputs": [
                 {
                     "OutputKey": "ArtifactBucket",
-                    "OutputValue": "pre-reqs-ca-artifactbucket-1pryckrzw6utx"
+                    "OutputValue": "pre-reqs-ca-artifactbucket-1d5lhlo26ckmu"
                 }
             ],
             "Tags": [],

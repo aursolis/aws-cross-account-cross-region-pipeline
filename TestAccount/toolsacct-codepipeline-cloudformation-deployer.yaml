@@ -116,6 +116,8 @@ Resources:
               - s3:GetBucketPolicy
               - s3:GetObject
               - s3:ListBucket
+              - s3:PutBucketPolicy
+              - s3:DeleteBucketPolicy
             Resource:
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket, '/*']]
              - !Join ['',['arn:aws:s3:::',!Ref S3Bucket]]
