@@ -1,0 +1,143 @@
+{
+    "pipeline": {
+        "name": "sample-lambda-pipeline-ca",
+        "roleArn": "arn:aws:iam::924474025577:role/sample-lambda-codepipeline-role",
+        "artifactStores": {
+            "eu-west-1": {
+                "type": "S3",
+                "location": "pre-reqs-ca-artifactbucket-qyq1jgjaix27",
+                "encryptionKey": {
+                    "id": "arn:aws:kms:eu-west-1:924474025577:key/7cfbbdc3-a472-489d-9c35-3b1d6ca85d91",
+                    "type": "KMS"
+                }
+            },
+            "us-east-1": {
+                "type": "S3",
+                "location": "pre-reqs-cab-artifactbucket-1cw3n7whz627i",
+                "encryptionKey": {
+                    "id": "arn:aws:kms:us-east-1:924474025577:key/99f23464-0eb3-4478-91fe-1ba9a234fa44",
+                    "type": "KMS"
+                }
+            }
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "App",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "CodeCommit",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "BranchName": "master",
+                            "RepositoryName": "sample-lambda"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "SCCheckoutArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "roleArn": "arn:aws:iam::924474025577:role/ToolsAcctCodePipelineCodeCommitRole",
+                        "region": "eu-west-1"
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "Build",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "sample-lambda"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "BuildOutput"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "SCCheckoutArtifact"
+                            }
+                        ],
+                        "region": "eu-west-1"
+                    }
+                ]
+            },
+            {
+                "name": "DeployToTest",
+                "actions": [
+                    {
+                        "name": "CreateChangeSetTest",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_REPLACE",
+                            "Capabilities": "CAPABILITY_NAMED_IAM",
+                            "ChangeSetName": "sample-lambda-dev",
+                            "RoleArn": "arn:aws:iam::694337658763:role/cloudformationdeployer-role",
+                            "StackName": "sample-lambda-dev",
+                            "TemplatePath": "BuildOutput::samtemplate.yaml"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "BuildOutput"
+                            }
+                        ],
+                        "roleArn": "arn:aws:iam::694337658763:role/ToolsAcctCodePipelineCloudFormationRole",
+                        "region": "us-east-1"
+                    },
+                    {
+                        "name": "DeployChangeSetTest",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 2,
+                        "configuration": {
+                            "ActionMode": "CHANGE_SET_EXECUTE",
+                            "ChangeSetName": "sample-lambda-dev",
+                            "RoleArn": "arn:aws:iam::694337658763:role/cloudformationdeployer-role",
+                            "StackName": "sample-lambda-dev"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "BuildOutput"
+                            }
+                        ],
+                        "roleArn": "arn:aws:iam::694337658763:role/ToolsAcctCodePipelineCloudFormationRole",
+                        "region": "us-east-1"
+                    }
+                ]
+            }
+        ],
+        "version": 4
+    },
+    "metadata": {
+        "pipelineArn": "arn:aws:codepipeline:eu-west-1:924474025577:sample-lambda-pipeline-ca",
+        "created": 1552690144.126,
+        "updated": 1553003943.758
+    }
+}

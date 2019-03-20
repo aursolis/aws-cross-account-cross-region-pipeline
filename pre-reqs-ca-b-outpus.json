@@ -1,9 +1,9 @@
 {
     "Stacks": [
         {
-            "StackId": "arn:aws:cloudformation:us-east-1:694337658763:stack/pre-reqs-ca/21a32830-4774-11e9-8715-0aaa9d7b8aca",
-            "StackName": "pre-reqs-ca",
-            "ChangeSetId": "arn:aws:cloudformation:us-east-1:694337658763:changeSet/awscli-cloudformation-package-deploy-1552689970/3f6d3345-762e-4d15-8e41-f82e40d8f799",
+            "StackId": "arn:aws:cloudformation:us-east-1:924474025577:stack/pre-reqs-cab/cc56dce0-4a4e-11e9-abf2-0a515b01a4a4",
+            "StackName": "pre-reqs-cab",
+            "ChangeSetId": "arn:aws:cloudformation:us-east-1:924474025577:changeSet/awscli-cloudformation-package-deploy-1553006098/25484a76-d112-45b1-870e-7909a4e03e60",
             "Description": "Creates bucket account B",
             "Parameters": [
                 {
@@ -21,18 +21,26 @@
                 {
                     "ParameterKey": "TestAccount",
                     "ParameterValue": "694337658763"
+                },
+                {
+                    "ParameterKey": "CodeBuildCondition",
+                    "ParameterValue": "true"
                 }
             ],
-            "CreationTime": "2019-03-15T22:46:11.791Z",
-            "LastUpdatedTime": "2019-03-15T22:46:17.635Z",
+            "CreationTime": "2019-03-19T13:56:30.797Z",
+            "LastUpdatedTime": "2019-03-19T14:35:04.577Z",
             "RollbackConfiguration": {},
-            "StackStatus": "CREATE_COMPLETE",
+            "StackStatus": "UPDATE_COMPLETE",
             "DisableRollback": false,
             "NotificationARNs": [],
             "Outputs": [
                 {
+                    "OutputKey": "CMK",
+                    "OutputValue": "arn:aws:kms:us-east-1:924474025577:key/e4e3745b-a8f9-452f-911a-4115fbb027ff"
+                },
+                {
                     "OutputKey": "ArtifactBucket",
-                    "OutputValue": "pre-reqs-ca-artifactbucket-1d5lhlo26ckmu"
+                    "OutputValue": "pre-reqs-cab-artifactbucket-1cw3n7whz627i"
                 }
             ],
             "Tags": [],

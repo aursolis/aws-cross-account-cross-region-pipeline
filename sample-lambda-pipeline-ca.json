@@ -1,0 +1,74 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:eu-west-1:924474025577:stack/sample-lambda-pipeline-ca/6face110-4774-11e9-99c3-06b2a79f881c",
+            "StackName": "sample-lambda-pipeline-ca",
+            "ChangeSetId": "arn:aws:cloudformation:eu-west-1:924474025577:changeSet/awscli-cloudformation-package-deploy-1553017395/704fb6d5-fed1-4a23-82a8-a314f669b38f",
+            "Description": "CodePipeline for the Sample Lambda Function",
+            "Parameters": [
+                {
+                    "ParameterKey": "DevAccount",
+                    "ParameterValue": "924474025577"
+                },
+                {
+                    "ParameterKey": "CMKARNB",
+                    "ParameterValue": "arn:aws:kms:us-east-1:924474025577:key/e4e3745b-a8f9-452f-911a-4115fbb027ff"
+                },
+                {
+                    "ParameterKey": "S3Bucket",
+                    "ParameterValue": "pre-reqs-ca-artifactbucket-qyq1jgjaix27"
+                },
+                {
+                    "ParameterKey": "ProjectName",
+                    "ParameterValue": "sample-lambda"
+                },
+                {
+                    "ParameterKey": "CMKARN",
+                    "ParameterValue": "arn:aws:kms:eu-west-1:924474025577:key/7cfbbdc3-a472-489d-9c35-3b1d6ca85d91"
+                },
+                {
+                    "ParameterKey": "ProductionAccount",
+                    "ParameterValue": "694337658763"
+                },
+                {
+                    "ParameterKey": "S3BucketB",
+                    "ParameterValue": "pre-reqs-cab-artifactbucket-1cw3n7whz627i"
+                },
+                {
+                    "ParameterKey": "TestAccount",
+                    "ParameterValue": "694337658763"
+                },
+                {
+                    "ParameterKey": "CrossAccountCondition",
+                    "ParameterValue": "true"
+                }
+            ],
+            "CreationTime": "2019-03-15T22:48:22.717Z",
+            "LastUpdatedTime": "2019-03-19T17:43:21.786Z",
+            "RollbackConfiguration": {
+                "RollbackTriggers": []
+            },
+            "StackStatus": "UPDATE_COMPLETE",
+            "DisableRollback": false,
+            "NotificationARNs": [],
+            "Capabilities": [
+                "CAPABILITY_NAMED_IAM"
+            ],
+            "Outputs": [
+                {
+                    "OutputKey": "CodePipelineArn",
+                    "OutputValue": "arn:aws:iam::924474025577:role/sample-lambda-codepipeline-role"
+                },
+                {
+                    "OutputKey": "CodeBuildProjectArn",
+                    "OutputValue": "arn:aws:iam::924474025577:role/sample-lambda-CodeBuildRole"
+                }
+            ],
+            "Tags": [],
+            "EnableTerminationProtection": false,
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}

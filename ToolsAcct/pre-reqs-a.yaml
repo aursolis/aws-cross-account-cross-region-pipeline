@@ -69,6 +69,10 @@ Resources:
                   - AddCodeBuildResource
                   - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-CodeBuildRole
                   - !Ref AWS::NoValue
+                - !If
+                  - AddCodeBuildResource
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${ProjectName}-codepipeline-role
+                  - !Ref AWS::NoValue
             Action:
               - kms:Encrypt
               - kms:Decrypt
@@ -90,4 +94,3 @@ Outputs:
     Value: !GetAtt [KMSKey,Arn]
   ArtifactBucket:
     Value: !Ref ArtifactBucket
-

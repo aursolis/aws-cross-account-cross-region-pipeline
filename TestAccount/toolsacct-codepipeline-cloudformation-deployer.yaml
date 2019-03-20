@@ -24,6 +24,9 @@ Parameters:
   CMKARN:
     Description: ARN of the KMS CMK creates in Tools account
     Type: String
+  CMKARNB:
+    Description: ARN of the KMS CMK creates in Tools account
+    Type: String
 Resources:
   CFRole:
     Type: AWS::IAM::Role
@@ -59,7 +62,9 @@ Resources:
             Effect: Allow
             Action:
               - kms:*
-            Resource: !Ref CMKARN
+            Resource: 
+              - !Ref CMKARN
+              - !Ref CMKARNB
       Roles:
         -
           !Ref CFRole

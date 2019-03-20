@@ -31,6 +31,9 @@ Parameters:
   CMKARN:
     Description: ARN of the KMS CMK creates in Tools account
     Type: String
+  CMKARNB:
+    Description: ARN of the KMS CMK creates in Tools account
+    Type: String
   CrossAccountCondition:
     Description: Conditionally creates the resources for cross account access
     Type: String
@@ -39,6 +42,8 @@ Parameters:
 Outputs:
   CodeBuildProjectArn:
     Value: !GetAtt [BuildProjectRole,Arn]
+  CodePipelineArn:
+    Value: !GetAtt [PipeLineRole,Arn]
 
 Conditions:
   AddCodeBuildResource: !Equals [ !Ref CrossAccountCondition, true ]
@@ -86,7 +91,9 @@ Resources:
             Effect: Allow
             Action:
               - kms:*
-            Resource: !Ref CMKARN
+            Resource: 
+              - !Ref CMKARN
+              - !Ref CMKARNB
           -
             Effect: Allow
             Action:
@@ -129,7 +136,7 @@ Resources:
                 - pip install -r scripts/requirements.txt -t "$PWD"
             build:
               commands:
-                - aws cloudformation package --template-file lambda-cloudformation.yaml --s3-bucket $S3Bucket --s3-prefix sample-lambda/codebuild --output-template-file samtemplate.yaml
+                - aws cloudformation package --template-file lambda-cloudformation.yaml --s3-bucket $S3BucketB --s3-prefix sample-lambda/codebuild --output-template-file samtemplate.yaml
           artifacts:
             files: samtemplate.yaml
             discard-paths: yes
@@ -195,7 +202,9 @@ Resources:
             Effect: Allow
             Action:
               - kms:Decrypt
-            Resource: !Ref CMKARN
+            Resource: 
+              - !Ref CMKARN
+              - !Ref CMKARNB
           -
             Effect: Allow
             Action:
@@ -401,7 +410,7 @@ Resources:
                   Type: "S3"
                   Location: !Ref S3BucketB
                   EncryptionKey:
-                    Id: !Ref CMKARN
+                    Id: !Ref CMKARNB
                     Type: KMS
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy

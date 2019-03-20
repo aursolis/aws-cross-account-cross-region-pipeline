@@ -1,10 +1,10 @@
 {
     "Stacks": [
         {
-            "StackId": "arn:aws:cloudformation:eu-west-1:924474025577:stack/pre-reqs-ca/a9cbd5f0-4773-11e9-a68b-064aa725f74e",
-            "StackName": "pre-reqs-ca",
-            "ChangeSetId": "arn:aws:cloudformation:eu-west-1:924474025577:changeSet/awscli-cloudformation-package-deploy-1552689769/7052dd8a-5d24-47e4-b58c-6c0b58db1337",
-            "Description": "Creates a CMK in KMS and grants access to other accounts",
+            "StackId": "arn:aws:cloudformation:us-east-1:924474025577:stack/pre-reqs-cab/cc56dce0-4a4e-11e9-abf2-0a515b01a4a4",
+            "StackName": "pre-reqs-cab",
+            "ChangeSetId": "arn:aws:cloudformation:us-east-1:924474025577:changeSet/awscli-cloudformation-package-deploy-1553006098/25484a76-d112-45b1-870e-7909a4e03e60",
+            "Description": "Creates bucket account B",
             "Parameters": [
                 {
                     "ParameterKey": "DevAccount",
@@ -24,23 +24,23 @@
                 },
                 {
                     "ParameterKey": "CodeBuildCondition",
-                    "ParameterValue": "false"
+                    "ParameterValue": "true"
                 }
             ],
-            "CreationTime": "2019-03-15T22:42:50.727Z",
-            "LastUpdatedTime": "2019-03-15T22:42:56.043Z",
+            "CreationTime": "2019-03-19T13:56:30.797Z",
+            "LastUpdatedTime": "2019-03-19T14:35:04.577Z",
             "RollbackConfiguration": {},
-            "StackStatus": "CREATE_COMPLETE",
+            "StackStatus": "UPDATE_COMPLETE",
             "DisableRollback": false,
             "NotificationARNs": [],
             "Outputs": [
                 {
                     "OutputKey": "CMK",
-                    "OutputValue": "arn:aws:kms:eu-west-1:924474025577:key/7cfbbdc3-a472-489d-9c35-3b1d6ca85d91"
+                    "OutputValue": "arn:aws:kms:us-east-1:924474025577:key/e4e3745b-a8f9-452f-911a-4115fbb027ff"
                 },
                 {
                     "OutputKey": "ArtifactBucket",
-                    "OutputValue": "pre-reqs-ca-artifactbucket-qyq1jgjaix27"
+                    "OutputValue": "pre-reqs-cab-artifactbucket-1cw3n7whz627i"
                 }
             ],
             "Tags": [],
